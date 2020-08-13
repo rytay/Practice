@@ -24,14 +24,20 @@ public class Friend {
         friend.getFriends().add(this);
     }
 
-    public boolean canBeConnected(Friend friend) {
-
+    public boolean recursiveDFS(Friend friend, HashSet<String> isVisited){
+        isVisited.add(this.email);
         if(this.friends.contains(friend))
             return true;
         for(Friend f: friends)
-            return friend.canBeConnected(f);
+            if(!isVisited.contains(f.getEmail()))
+                return friend.recursiveDFS(f,isVisited);
 
         return false;
+    }
+
+    public boolean canBeConnected(Friend friend) {
+        HashSet<String> isVisited = new HashSet<>();
+        return recursiveDFS(friend,isVisited);
     }
 
     public static void main(String[] args) {
@@ -45,9 +51,8 @@ public class Friend {
         a.addFriendship(b);
         b.addFriendship(c);
         c.addFriendship(d);;
-        x.addFriendship(d);
         y.addFriendship(x);
-
+        d.addFriendship(y);
         System.out.println(x.canBeConnected(a));
     }
 }
